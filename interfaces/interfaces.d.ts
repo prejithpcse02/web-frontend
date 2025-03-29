@@ -41,13 +41,17 @@ interface Image {
 }
 
 interface ListingItem {
-  id: number;
+  product_id: string;
+  slug: string;
   title: string;
   description: string;
-  price: string;
+  price: number;
+  condition: string;
   location: string;
   status: string;
   created_at: string;
   seller_name: string;
-  images: Image[];
+  images: { image_url: string }[];
+  is_liked: boolean;
+  likes_count: number;
 }

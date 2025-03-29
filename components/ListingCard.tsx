@@ -1,31 +1,71 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import LikeButton from "./LikeButton";
+import axios from "axios";
+
+interface ListingItem {
+  product_id: string;
+  slug: string;
+  title: string;
+  description: string;
+  price: number;
+  condition: string;
+  location: string;
+  status: string;
+  created_at: string;
+  seller_name: string;
+  images: { image_url: string }[];
+  is_liked: boolean;
+  likes_count: number;
+}
 
 const ListingCard = ({ item }: { item: ListingItem }) => {
   const {
-    id,
+    product_id,
+    slug,
     title,
     description,
     price,
+    condition,
     location,
     status,
     created_at,
     seller_name,
     images,
+    is_liked: initialIsLiked,
+    likes_count: initialLikesCount,
   } = item;
 
+  const [likesCount, setLikesCount] = useState(initialLikesCount);
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+
+  const handleLikeChange = async (newIsLiked: boolean) => {
+    setIsLiked(newIsLiked);
+    setLikesCount((prev) => (newIsLiked ? prev + 1 : prev - 1));
+  };
+
   return (
-    <Link href={`/listings/${id}`} className="w-full">
-      <div className="h-full bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100 overflow-hidden">
+    <div className="w-full">
+      <div className="h-full bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border-[1px] border-gray-300 shadow-gray-200 overflow-hidden z-30">
         <div className="relative aspect-square">
-          <Image
-            src={images[0].image_url}
-            alt={title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          />
+          <div className="absolute top-2 right-2 z-50">
+            <LikeButton
+              slug={slug}
+              listingId={product_id}
+              initialIsLiked={isLiked}
+              onLikeChange={handleLikeChange}
+            />
+          </div>
+          <Link href={`/listings/${slug}/${product_id}`}>
+            <Image
+              src={images[0].image_url}
+              alt={title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            />
+          </Link>
         </div>
         <div className="p-4">
           <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 min-h-[40px]">
@@ -33,17 +73,25 @@ const ListingCard = ({ item }: { item: ListingItem }) => {
           </h3>
           <div className="flex flex-row justify-between items-center mt-2">
             <span className="text-lg font-bold text-primary">₹{price}</span>
-            <span className="text-xs font-medium text-gray-600">
-              {seller_name}
-            </span>
+            <div className="flex items-center space-x-2">
+              {/*<span className="text-sm text-gray-500">{likesCount} likes</span>*/}
+              <Link
+                href={`/users/${seller_name}`}
+                className="text-xs font-medium text-blue-600 z-10"
+              >
+                {seller_name}
+              </Link>
+            </div>
           </div>
           <div className="flex flex-row justify-between items-center mt-2 text-xs text-gray-500">
-            <span>{location}</span>
-            <span>{new Date(created_at).toLocaleDateString()}</span>
+            <span className="text-gray-600 max-w-[45%]">{location}</span>
+            <span className="font-semibold text-gray-800">
+              {new Date(created_at).toLocaleDateString()}
+            </span>
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

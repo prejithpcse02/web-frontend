@@ -9,7 +9,7 @@ export default function Home() {
           Discover amazing listings with just one tap!
         </span>
         <Link
-          href="/listings"
+          href="/auth/signin"
           className="w-fit px-3 py-2 rounded-md bg-blue-600 text-white"
         >
           Explore Items ➡
