@@ -33,11 +33,13 @@ interface ListingItem {
   likes_count: number;
 }
 
-export default function ProfilePage({
-  params,
-}: {
-  params: { nickname: string };
-}) {
+interface PageProps {
+  params: {
+    nickname: string;
+  };
+}
+
+export default function ProfilePage({ params }: PageProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [listings, setListings] = useState<ListingItem[]>([]);
   const [loading, setLoading] = useState(true);
