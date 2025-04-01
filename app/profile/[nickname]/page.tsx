@@ -1,14 +1,17 @@
+import { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import ProfileContent from "./ProfileContent";
 
-type Props = {
-  params: {
-    nickname: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+export const metadata: Metadata = {
+  title: "User Profile",
+  description: "View user profile and listings",
 };
 
-export default async function ProfilePage({ params }: Props) {
+export default function ProfilePage({
+  params,
+}: {
+  params: { nickname: string };
+}) {
   return (
     <>
       <Navbar />
