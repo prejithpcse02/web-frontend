@@ -1,4 +1,4 @@
-"use client";
+/*"use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/services/api";
@@ -123,7 +123,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
       <Navbar />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="container mx-auto px-4">
-          {/* Profile Header */}
+          
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <div className="flex items-center space-x-4">
               <div className="relative w-24 h-24">
@@ -149,7 +149,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
             </div>
           </div>
 
-          {/* Listings Section */}
+         
           <div>
             <h2 className="text-xl font-semibold mb-4">Listings</h2>
             {listings.length === 0 ? (
@@ -169,3 +169,12 @@ export default function ProfilePage({ params }: ProfilePageProps) {
     </>
   );
 }
+*/
+
+import React from "react";
+
+const page = () => {
+  return <div>Profile Page</div>;
+};
+
+export default page;
