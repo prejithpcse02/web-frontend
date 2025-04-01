@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 import ListingCard from "@/components/ListingCard";
 
+// Define the expected shape for the user profile and listings
 interface UserProfile {
   id: number;
   email: string;
@@ -34,7 +35,7 @@ interface ListingItem {
 }
 
 interface ProfilePageProps {
-  params: { nickname: string };
+  params: { nickname: string }; // Ensure this matches the dynamic route parameters
 }
 
 export default function ProfilePage({ params }: ProfilePageProps) {
@@ -54,9 +55,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
         const response = await api.get(`/api/profiles/${params.nickname}/`);
         setProfile(response.data);
         // Fetch user's listings
-        const listingsResponse = await api.get(
-          `/api/listings/?seller=${response.data.id}`
-        );
+        const listingsResponse = await api.get(`/api/listings/?seller=${response.data.id}`);
         setListings(listingsResponse.data);
       } catch (error: any) {
         console.error("Error fetching profile:", error);
@@ -94,10 +93,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
         <Navbar />
         <div className="min-h-screen bg-gray-50 py-8">
           <div className="container mx-auto px-4">
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
               <strong className="font-bold">Error!</strong>
               <span className="block sm:inline"> {error}</span>
             </div>
@@ -114,9 +110,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
         <div className="min-h-screen bg-gray-50 py-8">
           <div className="container mx-auto px-4">
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-800">
-                User not found
-              </h1>
+              <h1 className="text-2xl font-bold text-gray-800">User not found</h1>
             </div>
           </div>
         </div>
@@ -134,43 +128,23 @@ export default function ProfilePage({ params }: ProfilePageProps) {
             <div className="flex items-center space-x-4">
               <div className="relative w-24 h-24">
                 {profile.avatar ? (
-                  <img
-                    src={profile.avatar}
-                    alt={profile.nickname}
-                    className="w-full h-full rounded-full object-cover"
-                  />
+                  <img src={profile.avatar} alt={profile.nickname} className="w-full h-full rounded-full object-cover" />
                 ) : (
                   <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
-                    <span className="text-2xl text-gray-500">
-                      {profile.nickname.charAt(0).toUpperCase()}
-                    </span>
+                    <span className="text-2xl text-gray-500">{profile.nickname.charAt(0).toUpperCase()}</span>
                   </div>
                 )}
                 {profile.is_verified && (
                   <div className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-1">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
                 )}
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">
-                  {profile.nickname}
-                </h1>
-                <p className="text-gray-600">
-                  Member since{" "}
-                  {new Date(profile.created_at).toLocaleDateString()}
-                </p>
+                <h1 className="text-2xl font-bold text-gray-800">{profile.nickname}</h1>
+                <p className="text-gray-600">Member since {new Date(profile.created_at).toLocaleDateString()}</p>
               </div>
             </div>
           </div>
