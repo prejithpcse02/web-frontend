@@ -33,11 +33,11 @@ interface ListingItem {
   likes_count: number;
 }
 
-export default function ProfilePage({
-  params,
-}: {
+interface ProfilePageProps {
   params: { nickname: string };
-}) {
+}
+
+export default function ProfilePage({ params }: ProfilePageProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [listings, setListings] = useState<ListingItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,8 +50,10 @@ export default function ProfilePage({
       try {
         setLoading(true);
         setError(null);
+        // Fetch user profile
         const response = await api.get(`/api/profiles/${params.nickname}/`);
         setProfile(response.data);
+        // Fetch user's listings
         const listingsResponse = await api.get(
           `/api/listings/?seller=${response.data.id}`
         );
@@ -127,6 +129,7 @@ export default function ProfilePage({
       <Navbar />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="container mx-auto px-4">
+          {/* Profile Header */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <div className="flex items-center space-x-4">
               <div className="relative w-24 h-24">
@@ -171,6 +174,8 @@ export default function ProfilePage({
               </div>
             </div>
           </div>
+
+          {/* Listings Section */}
           <div>
             <h2 className="text-xl font-semibold mb-4">Listings</h2>
             {listings.length === 0 ? (
