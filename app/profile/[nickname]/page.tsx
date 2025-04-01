@@ -8,7 +8,7 @@ type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export default function ProfilePage({ params }: Props) {
+export default async function ProfilePage({ params }: Props) {
   return (
     <>
       <Navbar />
