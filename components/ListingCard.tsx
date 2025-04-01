@@ -15,6 +15,7 @@ interface ListingItem {
   status: string;
   created_at: string;
   seller_name: string;
+  seller_id: number;
   images: { image_url: string }[];
   is_liked: boolean;
   likes_count: number;
@@ -32,6 +33,7 @@ const ListingCard = ({ item }: { item: ListingItem }) => {
     status,
     created_at,
     seller_name,
+    seller_id,
     images,
     is_liked: initialIsLiked,
     likes_count: initialLikesCount,
@@ -62,7 +64,7 @@ const ListingCard = ({ item }: { item: ListingItem }) => {
               src={images[0].image_url}
               alt={title}
               fill
-              className="object-cover"
+              className="object-contain"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             />
           </Link>
@@ -76,7 +78,7 @@ const ListingCard = ({ item }: { item: ListingItem }) => {
             <div className="flex items-center space-x-2">
               {/*<span className="text-sm text-gray-500">{likesCount} likes</span>*/}
               <Link
-                href={`/users/${seller_name}`}
+                href={`/profiles/${seller_name}`}
                 className="text-xs font-medium text-blue-600 z-10"
               >
                 {seller_name}
