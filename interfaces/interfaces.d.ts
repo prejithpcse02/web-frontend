@@ -51,6 +51,7 @@ interface ListingItem {
   status: string;
   created_at: string;
   seller_name: string;
+  seller_id: number;
   images: { image_url: string }[];
   is_liked: boolean;
   likes_count: number;
