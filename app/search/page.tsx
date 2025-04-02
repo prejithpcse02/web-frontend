@@ -1,7 +1,7 @@
 // li-web/app/search/page.tsx
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/services/api";
 import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
@@ -14,6 +14,23 @@ interface SearchRecord {
   created_at: string;
 }
 
+interface ListingItem {
+  product_id: string;
+  slug: string;
+  title: string;
+  description: string;
+  price: number;
+  condition: string;
+  location: string;
+  status: string;
+  created_at: string;
+  seller_name: string;
+  seller_id: number;
+  images: { image_url: string }[];
+  is_liked: boolean;
+  likes_count: number;
+}
+
 export default function SearchPage() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<ListingItem[]>([]);
@@ -23,6 +40,7 @@ export default function SearchPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     // If not authenticated and not loading, redirect to login
@@ -231,7 +249,11 @@ export default function SearchPage() {
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
                   {results.map((item) => (
-                    <ListingCard key={item.product_id} item={item} />
+                    <ListingCard
+                      key={item.product_id}
+                      item={item}
+                      isAuthenticated={!!user}
+                    />
                   ))}
                 </div>
               )}
@@ -244,7 +266,11 @@ export default function SearchPage() {
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 z-0">
                 {recentListings.map((item) => (
-                  <ListingCard key={item.product_id} item={item} />
+                  <ListingCard
+                    key={item.product_id}
+                    item={item}
+                    isAuthenticated={!!user}
+                  />
                 ))}
               </div>
             </div>
