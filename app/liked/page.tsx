@@ -6,6 +6,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import ListingCard from "@/components/ListingCard";
 import Navbar from "@/components/Navbar";
+import { useAuth } from "@/context/AuthContext";
+import api from "@/services/api";
 
 interface ListingItem {
   product_id: string;
@@ -25,87 +27,63 @@ interface ListingItem {
 }
 
 const LikedListings = () => {
+  const { user } = useAuth();
   const [listings, setListings] = useState<ListingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchLikedListings = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          router.push("/login");
-          return;
-        }
+    if (user) {
+      fetchLikedListings();
+    }
+  }, [user]);
 
-        const response = await axios.get(
-          "http://127.0.0.1:8000/api/listings/liked/",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        );
+  const fetchLikedListings = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.get("/api/listings/liked/");
+      setListings(response.data);
+    } catch (err) {
+      console.error("Error fetching liked listings:", err);
+      setError("Failed to fetch liked listings");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        // Transform the data to include is_liked and likes_count
-        const transformedListings = response.data.map((listing: any) => ({
-          ...listing,
-          is_liked: true, // Since these are liked listings
-          likes_count: listing.likes_count || 0,
-        }));
-
-        setListings(transformedListings);
-      } catch (error: any) {
-        if (error.response?.status === 401) {
-          localStorage.removeItem("token");
-          router.push("/login");
-        } else if (error.response?.status === 403) {
-          setError("You don't have permission to view liked listings");
-        } else {
-          setError("Failed to fetch liked listings. Please try again later.");
-          console.error("Error fetching liked listings:", error);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLikedListings();
-  }, [router]);
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            Please sign in to view your liked listings
+          </h2>
+          <a
+            href="/auth/signin"
+            className="text-blue-600 hover:text-blue-500 font-medium"
+          >
+            Sign in
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
-      <>
-        <Navbar />
-        <div className="min-h-screen bg-gray-100 py-8">
-          <div className="container mx-auto px-4">
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-            </div>
-          </div>
-        </div>
-      </>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <>
-        <Navbar />
-        <div className="min-h-screen bg-gray-100 py-8">
-          <div className="container mx-auto px-4">
-            <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <strong className="font-bold">Error!</strong>
-              <span className="block sm:inline"> {error}</span>
-            </div>
-          </div>
-        </div>
-      </>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-red-500">{error}</div>
+      </div>
     );
   }
 
@@ -126,7 +104,11 @@ const LikedListings = () => {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
               {listings.map((listing) => (
-                <ListingCard key={listing.product_id} item={listing} />
+                <ListingCard 
+                  key={listing.product_id} 
+                  item={listing} 
+                  isAuthenticated={true}
+                />
               ))}
             </div>
           )}
