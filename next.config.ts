@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     domains: [
       "127.0.0.1",
       "localhost",
-      "https://web-frontend-wa54.vercel.app/",
+      "https://web-frontend-w5a4.vercel.app/",
     ],
     remotePatterns: [
       {
