@@ -95,7 +95,7 @@ const ListItem: React.FC<ListItemProps> = ({ item }) => {
       <div className="mb-4 relative max-w-2xl mx-auto px-4 py-4">
         <Slider {...settings} className="rounded-md overflow-hidden">
           {images.map((image, index) => (
-            <div key={image.id} className="flex justify-center">
+            <div key={index} className="flex justify-center">
               <img
                 src={image.image_url}
                 alt={title}
@@ -167,8 +167,8 @@ const ListItem: React.FC<ListItemProps> = ({ item }) => {
             ref={sliderRef}
             className="rounded-md overflow-hidden"
           >
-            {images.map((image) => (
-              <div key={image.id} className="flex justify-center">
+            {images.map((image, index) => (
+              <div key={index} className="flex justify-center">
                 <img
                   src={image.image_url}
                   alt={title}
@@ -182,7 +182,7 @@ const ListItem: React.FC<ListItemProps> = ({ item }) => {
           <div className="flex justify-center mt-4">
             {images.map((image, index) => (
               <img
-                key={image.id}
+                key={index}
                 src={image.image_url}
                 alt={title}
                 className={`w-16 h-16 object-cover rounded-md cursor-pointer mx-1 ${
