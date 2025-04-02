@@ -105,8 +105,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const userData = await authAPI.getProfile();
       setUser(userData);
 
-      // Redirect to home page
-      router.push("/");
+      // Don't redirect here, let the component handle it
+      return;
     } catch (err) {
       console.error("Login error:", err);
       if (axios.isAxiosError(err)) {
@@ -114,6 +114,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       } else {
         setError("An unexpected error occurred");
       }
+      throw err; // Re-throw the error to be handled by the component
     } finally {
       setIsLoading(false);
     }
@@ -134,6 +135,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       } else {
         setError("An unexpected error occurred");
       }
+      throw err; // Re-throw the error to be handled by the component
     } finally {
       setIsLoading(false);
     }

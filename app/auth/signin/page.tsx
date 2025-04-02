@@ -3,12 +3,13 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 //import { useAuth } from "../../context/AuthContext";
 
 const SignInPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const {
     login,
     error: authError,
@@ -34,11 +35,22 @@ const SignInPage = () => {
 
     try {
       await login(email, password);
-      // Redirect to listings page after successful login
-      router.push("/listings");
-    } catch (err) {
-      // Error is handled by auth context and displayed via the error state
-      console.error("Login failed:", err);
+      // Only redirect on successful login
+      const redirectTo = searchParams.get("from") || "/listings";
+      router.push(redirectTo);
+    } catch (err: any) {
+      // Handle specific error cases
+      if (err.response?.status === 401) {
+        setError("Invalid email or password. Please try again.");
+      } else if (err.response?.status === 400) {
+        setError("Please check your email and password format.");
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
+      // Clear password field on error
+      setPassword("");
+      // Don't redirect, stay on the signin page
+      return;
     }
   };
 

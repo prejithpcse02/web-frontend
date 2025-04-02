@@ -21,7 +21,12 @@ interface ListingItem {
   likes_count: number;
 }
 
-const ListingCard = ({ item }: { item: ListingItem }) => {
+interface ListingCardProps {
+  item: ListingItem;
+  isAuthenticated: boolean;
+}
+
+const ListingCard = ({ item, isAuthenticated }: ListingCardProps) => {
   const {
     product_id,
     slug,
@@ -43,6 +48,11 @@ const ListingCard = ({ item }: { item: ListingItem }) => {
   const [isLiked, setIsLiked] = useState(initialIsLiked);
 
   const handleLikeChange = async (newIsLiked: boolean) => {
+    if (!isAuthenticated) {
+      // Redirect to login if not authenticated
+      window.location.href = "/auth/signin";
+      return;
+    }
     setIsLiked(newIsLiked);
     setLikesCount((prev) => (newIsLiked ? prev + 1 : prev - 1));
   };
@@ -51,14 +61,16 @@ const ListingCard = ({ item }: { item: ListingItem }) => {
     <div className="w-full">
       <div className="h-full bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border-[1px] border-gray-300 shadow-gray-200 overflow-hidden z-30">
         <div className="relative aspect-square">
-          <div className="absolute top-2 right-2 z-50">
-            <LikeButton
-              slug={slug}
-              listingId={product_id}
-              initialIsLiked={isLiked}
-              onLikeChange={handleLikeChange}
-            />
-          </div>
+          {isAuthenticated && (
+            <div className="absolute top-2 right-2 z-50">
+              <LikeButton
+                slug={slug}
+                listingId={product_id}
+                initialIsLiked={isLiked}
+                onLikeChange={handleLikeChange}
+              />
+            </div>
+          )}
           <Link href={`/listings/${slug}/${product_id}`}>
             <Image
               src={images[0].image_url}

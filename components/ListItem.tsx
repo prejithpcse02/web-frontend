@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -97,19 +96,15 @@ const ListItem: React.FC<ListItemProps> = ({ item }) => {
         <Slider {...settings} className="rounded-md overflow-hidden">
           {images.map((image, index) => (
             <div key={index} className="flex justify-center">
-              <div className="relative w-full h-64 sm:h-100">
-                <Image
-                  src={image.image_url}
-                  alt={title}
-                  fill
-                  className="object-contain rounded-md cursor-pointer"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  onClick={() => {
-                    setSelectedIndex(index);
-                    setIsOpen(true);
-                  }}
-                />
-              </div>
+              <img
+                src={image.image_url}
+                alt={title}
+                className="w-full h-64 sm:h-100 object-contain rounded-md cursor-pointer"
+                onClick={() => {
+                  setSelectedIndex(index);
+                  setIsOpen(true);
+                }}
+              />
             </div>
           ))}
         </Slider>
@@ -157,6 +152,7 @@ const ListItem: React.FC<ListItemProps> = ({ item }) => {
         className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
       >
         <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl p-6 relative">
+          {/* Close Button */}
           <button
             onClick={() => setIsOpen(false)}
             className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 rounded-full p-2"
@@ -173,15 +169,11 @@ const ListItem: React.FC<ListItemProps> = ({ item }) => {
           >
             {images.map((image, index) => (
               <div key={index} className="flex justify-center">
-                <div className="relative w-full h-[500px]">
-                  <Image
-                    src={image.image_url}
-                    alt={title}
-                    fill
-                    className="object-contain rounded-md"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
-                  />
-                </div>
+                <img
+                  src={image.image_url}
+                  alt={title}
+                  className="w-full h-[500px] object-contain rounded-md"
+                />
               </div>
             ))}
           </Slider>
@@ -189,9 +181,11 @@ const ListItem: React.FC<ListItemProps> = ({ item }) => {
           {/* Thumbnail Navigation */}
           <div className="flex justify-center mt-4">
             {images.map((image, index) => (
-              <div
+              <img
                 key={index}
-                className={`relative w-16 h-16 mx-1 cursor-pointer ${
+                src={image.image_url}
+                alt={title}
+                className={`w-16 h-16 object-cover rounded-md cursor-pointer mx-1 ${
                   selectedIndex === index
                     ? "border-2 border-blue-500"
                     : "border border-gray-300"
@@ -202,15 +196,7 @@ const ListItem: React.FC<ListItemProps> = ({ item }) => {
                   }
                   setSelectedIndex(index);
                 }}
-              >
-                <Image
-                  src={image.image_url}
-                  alt={title}
-                  fill
-                  className="object-cover rounded-md"
-                  sizes="64px"
-                />
-              </div>
+              />
             ))}
           </div>
         </div>
