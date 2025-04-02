@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 //import { useAuth } from "../../context/AuthContext";
 
-const SignInPage = () => {
+const SignInPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const {
@@ -184,6 +184,14 @@ const SignInPage = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const SignInPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInPageContent />
+    </Suspense>
   );
 };
 
