@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["127.0.0.1", "localhost", "web-frontend-w5a6.vercel.app"],
     remotePatterns: [
       {
         protocol: "http",
@@ -10,7 +9,24 @@ const nextConfig: NextConfig = {
         port: "8000",
         pathname: "/media/**",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8000",
+        pathname: "/media/**",
+      },
+      {
+        protocol: "https",
+        hostname: "**",
+        pathname: "/media/**",
+      },
+      {
+        protocol: "http",
+        hostname: "**",
+        pathname: "/media/**",
+      },
     ],
+    unoptimized: true,
   },
 };
 
